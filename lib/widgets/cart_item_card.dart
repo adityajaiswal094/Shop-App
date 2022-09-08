@@ -42,6 +42,37 @@ class CartItemCard extends StatelessWidget {
       onDismissed: (direction) {
         Provider.of<Cart>(context, listen: false).removeProduct(productId);
       },
+      confirmDismiss: (direction) {
+        return showDialog(
+          context: context,
+          builder: (ctx) {
+            return AlertDialog(
+              title: const Text(
+                'Are you sure?',
+                style: TextStyle(fontFamily: 'Raleway'),
+              ),
+              content: const Text(
+                'Do you want to remove the item from the cart?',
+                style: TextStyle(fontFamily: 'Raleway'),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop(false);
+                  },
+                  child: const Text('No'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop(true);
+                  },
+                  child: const Text('Yes'),
+                ),
+              ],
+            );
+          },
+        );
+      },
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 4.0),
         child: Container(
@@ -81,7 +112,45 @@ class CartItemCard extends StatelessWidget {
               const Spacer(),
 
               // ADD, REMOVE BUTTON
-              AddRemoveButton(quantity),
+              Container(
+                height: 27.0,
+                width: 75.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(9.0),
+                  color: Colors.yellow[900],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Provider.of<Cart>(context, listen: false)
+                          .removeSingleItem(productId),
+                      child: const Icon(
+                        Icons.remove_rounded,
+                        size: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      '$quantity',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Provider.of<Cart>(context, listen: false)
+                          .addItem(productId, title, price, imageUrl),
+                      child: const Icon(
+                        Icons.add_rounded,
+                        size: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),
@@ -89,25 +158,3 @@ class CartItemCard extends StatelessWidget {
     );
   }
 }
-
-
-// ListTile(
-//           leading: Container(
-//             height: 90.0,
-//             width: 90.0,
-//             decoration: BoxDecoration(
-//               border: Border.all(color: Colors.grey),
-//               borderRadius: BorderRadius.circular(12.0),
-//             ),
-//             child: Padding(
-//               padding: const EdgeInsets.all(8.0),
-//               child: Image.network(
-//                 imageUrl,
-//                 fit: BoxFit.cover,
-//               ),
-//             ),
-//           ),
-//           title: Text(title),
-//           subtitle: Text('\$$price'),
-//           trailing: null,
-//         )
