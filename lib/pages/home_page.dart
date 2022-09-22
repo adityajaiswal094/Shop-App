@@ -1,10 +1,11 @@
-import 'package:cart_management/pages/cart_page.dart';
-import 'package:cart_management/providers/cart.dart';
-import 'package:cart_management/widgets/app_drawer.dart';
-import 'package:cart_management/widgets/badge.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/badge.dart';
+import '../providers/cart.dart';
+import '../pages/cart_page.dart';
+import '../widgets/app_drawer.dart';
+import '../providers/products_provider.dart';
 import '../widgets/products_overview_gridview.dart';
 
 enum FilterOptions {
@@ -21,6 +22,36 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _showFavouritesOnly = false;
+  var _isInit = true;
+  var _isLoading = false;
+
+  @override
+  void initState() {
+    // THIS WON'T WORK !!
+    // Provider.of<ProductsProvider>(context).fetchAndGetProducts();
+
+    // ONE WAY IS THIS
+    // Future.delayed(Duration.zero).then(
+    //     (_) => Provider.of<ProductsProvider>(context).fetchAndGetProducts());
+    super.initState();
+  }
+
+  // THIS IS ANOTHER AND MORE CORRECT WAY!!
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<ProductsProvider>(context).fetchAndGetProducts().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +101,11 @@ class _HomePageState extends State<HomePage> {
         titleSpacing: 0.0,
       ),
       drawer: const AppDrawer(),
-      body: ProductsOverviewGridView(_showFavouritesOnly),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProductsOverviewGridView(_showFavouritesOnly),
     );
   }
 }

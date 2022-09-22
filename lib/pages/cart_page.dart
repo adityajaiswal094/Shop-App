@@ -55,17 +55,7 @@ class CartPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Provider.of<Orders>(context, listen: false).addOrder(
-                          cart.items.values.toList(), cart.totalAmount);
-                      cart.clearCart();
-                    },
-                    child: const Text(
-                      'Place Order',
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                  ),
+                  OrderButton(cart: cart),
                 ],
               ),
             ),
@@ -73,5 +63,56 @@ class CartPage extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key? key,
+    required this.cart,
+  }) : super(key: key);
+
+  final Cart cart;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return _isLoading
+        ? const Padding(
+            padding: EdgeInsets.only(right: 16.0),
+            child: CircularProgressIndicator(),
+          )
+        : ElevatedButton(
+            onPressed: (widget.cart.totalAmount <= 0 || _isLoading)
+                ? null
+                : () async {
+                    setState(() {
+                      _isLoading = true;
+                    });
+
+                    //
+                    await Provider.of<Orders>(context, listen: false).addOrder(
+                        widget.cart.items.values.toList(),
+                        widget.cart.totalAmount);
+                    widget.cart.clearCart();
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  },
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: const Text(
+              'Place Order',
+              style: TextStyle(fontSize: 18.0),
+            ),
+          );
   }
 }

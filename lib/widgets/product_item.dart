@@ -48,7 +48,11 @@ class ProductItem extends StatelessWidget {
             onPressed: () {
               //
               cart.addItem(
-                  product.id, product.title, product.price, product.imageUrl);
+                product.id,
+                product.title,
+                product.price,
+                product.imageUrl,
+              );
 
               //
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -72,7 +76,7 @@ class ProductItem extends StatelessWidget {
               .pushNamed(ProductDetailPage.routeName, arguments: product.id),
           child: Image.network(
             product.imageUrl,
-            fit: BoxFit.cover,
+            fit: BoxFit.fitWidth,
           ),
         ),
       ),

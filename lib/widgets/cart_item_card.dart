@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/cart.dart';
-import '../widgets/add_remove_button.dart';
 import '../widgets/product_title_subtitle.dart';
 
 class CartItemCard extends StatelessWidget {
