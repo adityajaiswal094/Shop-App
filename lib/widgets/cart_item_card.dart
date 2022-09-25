@@ -85,7 +85,7 @@ class CartItemCard extends StatelessWidget {
                 height: 90.0,
                 width: 90.0,
                 margin:
-                    const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                    const EdgeInsets.only(top: 5.0, bottom: 5.0, right: 4.0),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(12.0),
@@ -101,7 +101,7 @@ class CartItemCard extends StatelessWidget {
 
               // SPACING
               const SizedBox(
-                width: 10.0,
+                width: 6.0,
               ),
 
               // ITEM NAME, PRICE

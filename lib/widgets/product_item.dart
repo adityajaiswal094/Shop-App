@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../pages/product_detail_page.dart';
-import '../providers/product.dart';
+import '../providers/auth.dart';
 import '../providers/cart.dart';
+import '../providers/product.dart';
+import '../pages/product_detail_page.dart';
 
 class ProductItem extends StatelessWidget {
-  // final String id;
-  // final String title;
-  // final String imageUrl;
-
-  const ProductItem({
-    Key? key,
-    // required this.id,
-    // required this.title,
-    // required this.imageUrl,
-  }) : super(key: key);
+  const ProductItem({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     //
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
+    final authData = Provider.of<Auth>(context, listen: false);
 
     //
     return ClipRRect(
@@ -34,7 +27,8 @@ class ProductItem extends StatelessWidget {
                   ? const Icon(Icons.favorite)
                   : const Icon(Icons.favorite_outline),
               color: Theme.of(context).colorScheme.secondary,
-              onPressed: product.toggleFavouriteStatus,
+              onPressed: () => product.toggleFavouriteStatus(
+                  authData.token, authData.userId),
             ),
           ),
           backgroundColor: Colors.black87,
@@ -76,7 +70,7 @@ class ProductItem extends StatelessWidget {
               .pushNamed(ProductDetailPage.routeName, arguments: product.id),
           child: Image.network(
             product.imageUrl,
-            fit: BoxFit.fitWidth,
+            fit: BoxFit.cover,
           ),
         ),
       ),

@@ -24,13 +24,8 @@ class ProductsOverviewGridView extends StatelessWidget {
         mainAxisSpacing: 10.0,
       ),
       itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
-        // create: (c) => products[index],
         value: products[index],
-        child: const ProductItem(
-            // id: products[index].id,
-            // title: products[index].title,
-            // imageUrl: products[index].imageUrl,
-            ),
+        child: const ProductItem(),
       ),
     );
   }
